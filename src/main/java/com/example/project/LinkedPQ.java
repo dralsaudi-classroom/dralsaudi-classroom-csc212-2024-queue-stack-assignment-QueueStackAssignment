@@ -1,6 +1,8 @@
 package com.example.project;
 
 public class LinkedPQ<T> {
+    public int priority;
+    public T data;
     private int size;
     private PQNode<T> head;
 
