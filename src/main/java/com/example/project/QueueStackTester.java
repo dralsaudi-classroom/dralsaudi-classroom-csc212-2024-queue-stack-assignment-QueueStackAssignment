@@ -3,33 +3,55 @@ package com.example.project;
 public class QueueStackTester {
 
     public static <T> void split(Queue<T> q, Queue<T> oq, Queue<T> eq) {
-        splitHelper(q, oq, eq, 1);
+        int count = q.length();
+        recSplit(q, oq, eq, count, 1);
     }
 
-    private static <T> void splitHelper(Queue<T> q, Queue<T> oq, Queue<T> eq, int index) {
-        if (q.empty()) return;
-        
-        T element = q.dequeue();
-        if (index % 2 != 0) {
+    private static <T> void recSplit(Queue<T> q, Queue<T> oq, Queue<T> eq, int count, int pos) {
+        if (pos > count) {
+            return;
+        }
+        T element = q.serve();
+
+        q.enqueue(element);
+
+
+        if (pos % 2 == 1) {
             oq.enqueue(element);
         } else {
             eq.enqueue(element);
         }
-        
-        splitHelper(q, oq, eq, index + 1);
-        q.enqueue(element);
+
+
+        recSplit(q, oq, eq, count, pos + 1);
     }
 
+
     public static <T> void remove(LinkedPQ<T> pq, int p) {
-        if (pq.empty()) return;
-        
-        T element = pq.dequeue();
-        if (pq.priority(element) >= p) {
-            pq.enqueue(element, pq.priority(element));
+        LinkedPQ<T> tempPQ = new LinkedPQ<T>();
+        int count = pq.length();
+
+
+        for (int i = 0; i < count; i++) {
+            PQElement<T> element = pq.serve();
+
+
+            if (element.p >= p) {
+                tempPQ.enqueue(element.data, element.p);
+            }
         }
-        
-        remove(pq, p);
+
+
+        count = tempPQ.length();
+        for (int i = 0; i < count; i++) {
+            PQElement<T> element = tempPQ.serve();
+            pq.enqueue(element.data, element.p);
+        }
     }
+
+
+
+
 
     public static <T> boolean search(Stack<T> st, T e) {
         if (st.empty()) return false;
